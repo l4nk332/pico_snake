@@ -59,10 +59,12 @@ function update_snake(is_growing)
   snake = new_snake
 end
 
-function draw_snake()
-  foreach(snake, function(c)
-    rectfill(c[1], c[2], c[1]+1, c[2]+1, 3)
-  end)
+function draw_snake(is_growing)
+  for c=1,#snake do
+    local s_color = 3
+    if (is_growing and c == #snake) then s_color = 11 end
+    rectfill(snake[c][1], snake[c][2], snake[c][1]+1, snake[c][2]+1, s_color)
+  end
 end
 
 function draw_fruit()
@@ -107,7 +109,7 @@ function new_hi_score()
   add(hi_score_p, head)
 end
 
-function game_over()
+function game_over(was_playing)
   local g_msg = "game over - "
   local score_msg = "score: "..score
   local replay_msg = "press x to replay"
@@ -116,6 +118,10 @@ function game_over()
     print(score_msg, hcenter(score_msg), 45, 7)
     new_hi_score()
   else
+    if (was_playing) then
+      print('hit!')
+      sfx(1)
+    end
     print(g_msg..score_msg, hcenter(g_msg..score_msg), 45, 7)
   end
   print(replay_msg, hcenter(replay_msg, 7), 64)
@@ -168,21 +174,22 @@ end
 
 function _draw()
   cls()
-  rect(0,0,127,117,7)
-
-  draw_fruit()
-
-  check_bounds()
-  local is_growing = check_fruit()
-  check_snake_collision()
+  local was_playing = is_playing
 
   if (is_playing) then
+    rect(0,0,127,117,7)
+
+    draw_fruit()
+
+    check_bounds()
+    local is_growing = check_fruit()
+    check_snake_collision()
+
     update_snake(is_growing)
-    draw_snake()
+    draw_snake(is_growing)
     draw_footer()
   else
-    draw_snake()
-    game_over()
+    game_over(was_playing)
   end
 end
 __gfx__
@@ -193,10 +200,9 @@ __gfx__
 00077000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-000100000a3100c3100f3101232015320173301a3301b3301d3301f33020330223302334024340243401b3001c3001d3001e30020300283002a3002c300213002230023300243002530025300263002730028300
-000200000d3000d3000d3000d3000d3000d3000d3000d300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000200000a3110c3110f311123211432115331173311a3311d3211f3211f311223012330124301243011b3011c3011d3011e30120301283012a3012c301213012230123301243012530125301263012730128301
+010700000d5500d5500d5500d555005000000000000000000f5500f5500f55010550105501055010555000000d5500d5500d5500d5500d5500d5550f5000f5000e5000e5000e5000e5000e5000e5000e50000000
 001000000d3500d3500d3500d3500d3500d3500d3500d350000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
-00 01424344
-00 01424344
+00 01434344
 
