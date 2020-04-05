@@ -3,7 +3,6 @@ version 18
 __lua__
 cartdata("ij_snake")
 
-hi_score = dget(0) or 0
 hi_score_p = {8,9,10,11,12}
 
 function init_state()
@@ -13,6 +12,7 @@ function init_state()
   fruit=rnd_coord()
   is_playing = true
   score = 0
+  hi_score = dget(0) or 0
 end
 
 function _init()
