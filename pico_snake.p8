@@ -109,7 +109,13 @@ function new_hi_score()
   add(hi_score_p, head)
 end
 
-function game_over(was_playing)
+function losing_sfx()
+  if (score < hi_score) then
+    sfx(1)
+  end
+end
+
+function game_over()
   local g_msg = "game over - "
   local score_msg = "score: "..score
   local replay_msg = "press x to replay"
@@ -118,10 +124,6 @@ function game_over(was_playing)
     print(score_msg, hcenter(score_msg), 45, 7)
     new_hi_score()
   else
-    if (was_playing) then
-      print('hit!')
-      sfx(1)
-    end
     print(g_msg..score_msg, hcenter(g_msg..score_msg), 45, 7)
   end
   print(replay_msg, hcenter(replay_msg, 7), 64)
@@ -130,6 +132,7 @@ end
 function check_bounds()
   if (snake[1][1] < 1 or snake[1][1] > 125 or snake[1][2] < 1 or snake[1][2] > 115) then
     is_playing = false
+    losing_sfx()
   end
 end
 
@@ -150,6 +153,7 @@ function check_snake_collision()
   for t=2,#snake do
     if (head[1] == snake[t][1] and head[2] == snake[t][2]) then
       is_playing = false
+      losing_sfx()
       break
     end
   end
@@ -174,7 +178,6 @@ end
 
 function _draw()
   cls()
-  local was_playing = is_playing
 
   if (is_playing) then
     rect(0,0,127,117,7)
@@ -189,7 +192,7 @@ function _draw()
     draw_snake(is_growing)
     draw_footer()
   else
-    game_over(was_playing)
+    game_over()
   end
 end
 __gfx__
@@ -201,7 +204,7 @@ __gfx__
 00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 000200000a3110c3110f311123211432115331173311a3311d3211f3211f311223012330124301243011b3011c3011d3011e30120301283012a3012c301213012230123301243012530125301263012730128301
-010700000d5500d5500d5500d555005000000000000000000f5500f5500f55010550105501055010555000000d5500d5500d5500d5500d5500d5550f5000f5000e5000e5000e5000e5000e5000e5000e50000000
+010600000d5500d5500d5500d5500d5500d555005000050000500005000f5500f5500f5501055010550105501055500500005000d5500d5500d5500d5500d5500d5550f5000f5000e5000e5000e5000e5000e500
 001000000d3500d3500d3500d3500d3500d3500d3500d350000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
 00 01434344
