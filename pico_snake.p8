@@ -111,6 +111,7 @@ function new_hi_score()
 end
 
 function losing_sfx()
+  music(-1, 300)
   if (score < hi_score) then
     sfx(2)
   else
