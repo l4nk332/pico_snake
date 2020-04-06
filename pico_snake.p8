@@ -4,8 +4,10 @@ __lua__
 cartdata("ij_snake")
 
 hi_score_p = {8,9,10,11,12}
+just_loaded = true
 
 function init_state()
+  just_loaded = false
   mdir = "d"
   snake={}
   for i=64,54,-1 do add(snake, {64, i}) end
@@ -14,10 +16,6 @@ function init_state()
   score = 0
   hi_score = dget(0) or 0
   music(0)
-end
-
-function _init()
-  init_state()
 end
 
 function rnd_coord()
@@ -81,7 +79,7 @@ function _update()
     mdir = "u"
   elseif (btn(3) and mdir != "u") then
     mdir = "d"
-  elseif (btn(5) and not is_playing) then
+  elseif (btn(5) and (not is_playing or just_loaded)) then
     init_state()
   end
 end
@@ -183,7 +181,14 @@ end
 function _draw()
   cls()
 
-  if (is_playing) then
+  if (just_loaded) then
+    local msg_1a = "pico"
+    local msg_1b = "snake"
+    local msg_2 = "press x to play"
+    print(msg_1a, (hcenter(msg_1a) - #msg_1a*2) - 1, 54, 14)
+    print(msg_1b, (hcenter(msg_1b) + #msg_1b*2) + 1, 54, 3)
+    print(msg_2, hcenter(msg_2), 64, 7)
+  elseif (is_playing) then
     rect(0,0,127,117,7)
 
     draw_fruit()
