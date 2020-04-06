@@ -1,6 +1,9 @@
 pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
+-- pico snake
+-- by l4nk332
+
 cartdata("ij_snake")
 
 hi_score_p = {8,9,10,11,12}
