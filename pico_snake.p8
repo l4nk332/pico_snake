@@ -8,6 +8,9 @@ cartdata("ij_snake")
 
 hi_score_p = {8,9,10,11,12}
 just_loaded = true
+move_speed = 1
+growth = 0
+growth_amt = 8
 
 function init_state()
   just_loaded = false
@@ -33,22 +36,22 @@ function next_head()
   local y = snake[1][2]
 
   if (mdir == "l") then
-    x -= 1
+    x -= move_speed
   elseif (mdir == "r") then
-    x += 1
+    x += move_speed
   elseif (mdir == "u") then
-    y -= 1
+    y -= move_speed
   elseif (mdir == "d") then
-    y += 1
+    y += move_speed
   end
 
   return {x, y}
 end
 
-function update_snake(is_growing)
+function update_snake()
   local new_snake = {next_head()}
 
-  if (is_growing) then
+  if growth > 0 then
     for s in all(snake) do
       add(new_snake, s)
     end
@@ -61,10 +64,10 @@ function update_snake(is_growing)
   snake = new_snake
 end
 
-function draw_snake(is_growing)
+function draw_snake()
   for c=1,#snake do
     local s_color = 3
-    if (is_growing and c == #snake) then s_color = 11 end
+    if (growth > 0 and c == #snake) then s_color = 11 end
     rectfill(snake[c][1], snake[c][2], snake[c][1]+1, snake[c][2]+1, s_color)
   end
 end
@@ -74,6 +77,8 @@ function draw_fruit()
 end
 
 function _update()
+  if growth > 0 then growth -= 1 end
+
   if (btn(0) and mdir != "r") then
     mdir = "l"
   elseif (btn(1) and mdir != "l") then
@@ -197,11 +202,11 @@ function _draw()
     draw_fruit()
 
     check_bounds()
-    local is_growing = check_fruit()
+    if check_fruit() then growth += growth_amt end
     check_snake_collision()
 
-    update_snake(is_growing)
-    draw_snake(is_growing)
+    update_snake()
+    draw_snake()
     draw_footer()
   else
     game_over()
